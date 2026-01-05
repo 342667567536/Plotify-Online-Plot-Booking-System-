@@ -1,0 +1,26 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+export default function PlotList() {
+  const [plots, setPlots] = useState([]);
+  useEffect(() => {
+    axios.get(`${API}/plots`).then(r => setPlots(r.data)).catch(console.error);
+  }, []);
+  return (
+    <div>
+      <h2>Available Plots</h2>
+      <ul>
+        {plots.map(p => (
+          <li key={p._id} style={{ marginBottom: 12, border: '1px solid #ddd', padding: 8 }}>
+            <strong>{p.title}</strong> — {p.description} <br />
+            Price: ${p.price} — Status: {p.status} <br />
+            <Link to={`/plots/${p._id}/book`}>Book</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
